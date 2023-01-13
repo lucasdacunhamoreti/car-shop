@@ -1,14 +1,15 @@
 import 'dotenv/config';
-import { App } from './app';
+// import App from './app';
+import app from './app';
 import connectToDatabase from './Models/Connection';
 
 const PORT = process.env.PORT || 3001;
 
-const app = new App();
+// const app = new App();
 
 connectToDatabase()
   .then(() => {
-    app.start(Number(PORT));
+    app.listen(PORT, () => console.log('Server online'));
   })
   .catch((error) => {
     console.log('Connection with database generated an error:\r\n');
