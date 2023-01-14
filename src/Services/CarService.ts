@@ -1,7 +1,7 @@
 import { isValidObjectId } from 'mongoose';
 import Car from '../Domains/Car';
 import ICar from '../Interfaces/ICar';
-import VehicleODM from '../Models/VehicleODM';
+import CarODM from '../Models/CarODM';
 import HttpException from '../utils/HttpException';
 import StatusCode from '../Interfaces/StatusCode';
 
@@ -14,14 +14,14 @@ class CarService {
   }
 
   public async registerNewCar(car: ICar) {
-    const vehicleODM = new VehicleODM();
-    const newCar = await vehicleODM.create(car);
+    const carODM = new CarODM();
+    const newCar = await carODM.create(car);
     return this.createVehicleDomain(newCar);
   }
 
   public async findAllCars() {
-    const vehicleODM = new VehicleODM();
-    const carGroup = await vehicleODM.findAll();
+    const carODM = new CarODM();
+    const carGroup = await carODM.findAll();
     const carsDomain = carGroup.map((obj) => this.createVehicleDomain(obj));
     
     return carsDomain;
@@ -30,8 +30,8 @@ class CarService {
   public async findById(id: string) {
     if (!isValidObjectId(id)) throw new HttpException('Invalid mongo id', StatusCode.UNPROCESSABLE);
 
-    const vehicleODM = new VehicleODM();
-    const carObj = await vehicleODM.findById(id);
+    const carODM = new CarODM();
+    const carObj = await carODM.findById(id);
 
     if (!carObj) {
       throw new HttpException('Car not found', StatusCode.NOT_FOUND);
