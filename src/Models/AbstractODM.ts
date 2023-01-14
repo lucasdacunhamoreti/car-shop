@@ -3,6 +3,7 @@ import {
   Schema,
   models,
   model,
+  UpdateQuery,
 } from 'mongoose';
 
 abstract class AbstractODM<T> {
@@ -30,6 +31,14 @@ abstract class AbstractODM<T> {
 
   public async findById(id: string): Promise<T | null> {
     return this._model.findById(id);
+  }
+
+  public async update(_id: string, body: Partial<T>): Promise<T | null> {
+    return this._model.findByIdAndUpdate(
+      { _id },
+      { ...body as UpdateQuery<T> },
+      { new: true },
+    );
   }
 }
 
