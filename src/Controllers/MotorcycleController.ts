@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import IMotorcycle from '../Interfaces/IMotorcycle';
+import StatusCode from '../Interfaces/StatusCode';
 import MotorcycleService from '../Services/MotorcycleService';
 
 class MotorcycleController {
@@ -15,50 +16,52 @@ class MotorcycleController {
     this.service = new MotorcycleService();
   }
 
-  public async create() {
+  public async registerMotorcycle() {
+    const { model, year, color, status, buyValue, category, engineCapacity } = this.req.body;
+    
     const motorcycle: IMotorcycle = {
-      model: this.req.body.model,
-      year: this.req.body.year,
-      color: this.req.body.color,
-      status: this.req.body.status ? this.req.body.status : false,
-      buyValue: this.req.body.buyValue,
-      category: this.req.body.category,
-      engineCapacity: this.req.body.engineCapacity,
+      model,
+      year,
+      color,
+      status: status || false,
+      buyValue,
+      category,
+      engineCapacity,
     };
     
     try {      
       const newMotorcycle = await this.service.registerMotorcycle(motorcycle);      
-      return this.res.status(201).json(newMotorcycle);
+      return this.res.status(StatusCode.CREATED).json(newMotorcycle);
     } catch (error) {
       this.next(error);
     }
   }
 
-  public async findAll() {
+  public async findAllMotorcycles() {
     try {   
-      const motorcyclesGroup = await this.service.findAllMotorcycles();      
-      return this.res.status(200).json(motorcyclesGroup);
+      const motorcycleGroup = await this.service.findAllMotorcycles();      
+      return this.res.status(StatusCode.OK).json(motorcycleGroup);
     } catch (error) {
       this.next(error);
     }
   }
 
-  public async findById() {
+  public async findMotorcycleById() {
     try { 
       const { id } = this.req.params;
-      const motorcyclesGroup = await this.service.findById(id);      
-      return this.res.status(200).json(motorcyclesGroup);
+      const motorcycleObj = await this.service.findMotorcycleById(id);      
+      return this.res.status(StatusCode.OK).json(motorcycleObj);
     } catch (error) {
       this.next(error);
     }
   }
 
-  public async updateById() {
+  public async updateMotorcycleById() {
     try { 
       const { id } = this.req.params;
       const { body } = this.req;
-      const motorcycleUpdated = await this.service.updateById(id, body);      
-      return this.res.status(200).json(motorcycleUpdated);
+      const motorcycleUpdated = await this.service.updateMotorcycleById(id, body);      
+      return this.res.status(StatusCode.OK).json(motorcycleUpdated);
     } catch (error) {
       this.next(error);
     }

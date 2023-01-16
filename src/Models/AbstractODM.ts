@@ -4,7 +4,10 @@ import {
   models,
   model,
   UpdateQuery,
+  isValidObjectId,
 } from 'mongoose';
+import StatusCode from '../Interfaces/StatusCode';
+import HttpException from '../utils/HttpException';
 
 abstract class AbstractODM<T> {
   private schema: Schema<T>;
@@ -39,6 +42,10 @@ abstract class AbstractODM<T> {
       { ...body as UpdateQuery<T> },
       { new: true },
     );
+  }
+
+  public validateId(id: string): void {
+    if (!isValidObjectId(id)) throw new HttpException('Invalid mongo id', StatusCode.UNPROCESSABLE);
   }
 }
 

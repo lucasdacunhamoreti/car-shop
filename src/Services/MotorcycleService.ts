@@ -1,12 +1,8 @@
-// import { isValidObjectId } from 'mongoose';
-import { isValidObjectId } from 'mongoose';
 import Motorcycle from '../Domains/Motorcycle';
 import IMotorcycle from '../Interfaces/IMotorcycle';
 import StatusCode from '../Interfaces/StatusCode';
 import MotorcycleODM from '../Models/MotorcycleODM';
 import HttpException from '../utils/HttpException';
-// import HttpException from '../utils/HttpException';
-// import StatusCode from '../Interfaces/StatusCode';
 
 class MotorcycleService {
   private createMotorcycleDomain(motorcycle: IMotorcycle | null): Motorcycle | null {
@@ -30,10 +26,9 @@ class MotorcycleService {
     return motorcycleDomain;
   }
 
-  public async findById(id: string) {
-    if (!isValidObjectId(id)) throw new HttpException('Invalid mongo id', StatusCode.UNPROCESSABLE);
-
+  public async findMotorcycleById(id: string) {
     const motorcycleODM = new MotorcycleODM();
+    motorcycleODM.validateId(id);
     const motorcycleObj = await motorcycleODM.findById(id);
 
     if (!motorcycleObj) {
@@ -43,10 +38,9 @@ class MotorcycleService {
     return this.createMotorcycleDomain(motorcycleObj);
   }
 
-  public async updateById(id: string, body: IMotorcycle) {
-    if (!isValidObjectId(id)) throw new HttpException('Invalid mongo id', StatusCode.UNPROCESSABLE);
-
+  public async updateMotorcycleById(id: string, body: IMotorcycle) {
     const motorcycleODM = new MotorcycleODM();
+    motorcycleODM.validateId(id);
     const motorcycleObj = await motorcycleODM.findById(id);
 
     if (!motorcycleObj) {

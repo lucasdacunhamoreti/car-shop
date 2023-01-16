@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import ICar from '../Interfaces/ICar';
+import StatusCode from '../Interfaces/StatusCode';
 import CarService from '../Services/CarService';
 
 class CarController {
@@ -15,50 +16,52 @@ class CarController {
     this.service = new CarService();
   }
 
-  public async create() {
+  public async registerCar() {
+    const { model, year, color, status, buyValue, doorsQty, seatsQty } = this.req.body;
+
     const car: ICar = {
-      model: this.req.body.model,
-      year: this.req.body.year,
-      color: this.req.body.color,
-      status: this.req.body.status ? this.req.body.status : false,
-      buyValue: this.req.body.buyValue,
-      doorsQty: this.req.body.doorsQty,
-      seatsQty: this.req.body.seatsQty,
+      model,
+      year,
+      color,
+      status: status || false,
+      buyValue,
+      doorsQty,
+      seatsQty,
     };
     
     try {      
-      const newCar = await this.service.registerNewCar(car);      
-      return this.res.status(201).json(newCar);
+      const newCar = await this.service.registerCar(car);      
+      return this.res.status(StatusCode.CREATED).json(newCar);
     } catch (error) {
       this.next(error);
     }
   }
 
-  public async findAll() {
+  public async findAllCars() {
     try {   
       const carGroup = await this.service.findAllCars();      
-      return this.res.status(200).json(carGroup);
+      return this.res.status(StatusCode.OK).json(carGroup);
     } catch (error) {
       this.next(error);
     }
   }
 
-  public async findById() {
+  public async findCarById() {
     try { 
       const { id } = this.req.params;
-      const carGroup = await this.service.findById(id);      
-      return this.res.status(200).json(carGroup);
+      const carObj = await this.service.findCarById(id);      
+      return this.res.status(StatusCode.OK).json(carObj);
     } catch (error) {
       this.next(error);
     }
   }
 
-  public async updateById() {
+  public async updateCarById() {
     try { 
       const { id } = this.req.params;
       const { body } = this.req;
-      const carUpdated = await this.service.updateById(id, body);      
-      return this.res.status(200).json(carUpdated);
+      const carUpdated = await this.service.updateCarById(id, body);      
+      return this.res.status(StatusCode.OK).json(carUpdated);
     } catch (error) {
       this.next(error);
     }

@@ -1,4 +1,3 @@
-import { isValidObjectId } from 'mongoose';
 import Car from '../Domains/Car';
 import ICar from '../Interfaces/ICar';
 import CarODM from '../Models/CarODM';
@@ -13,7 +12,7 @@ class CarService {
     return null;
   }
 
-  public async registerNewCar(car: ICar) {
+  public async registerCar(car: ICar) {
     const carODM = new CarODM();
     const newCar = await carODM.create(car);
     return this.createVehicleDomain(newCar);
@@ -22,15 +21,13 @@ class CarService {
   public async findAllCars() {
     const carODM = new CarODM();
     const carGroup = await carODM.findAll();
-    const carsDomain = carGroup.map((obj) => this.createVehicleDomain(obj));
     
-    return carsDomain;
+    return carGroup.map((obj) => this.createVehicleDomain(obj));
   }
 
-  public async findById(id: string) {
-    if (!isValidObjectId(id)) throw new HttpException('Invalid mongo id', StatusCode.UNPROCESSABLE);
-
+  public async findCarById(id: string) {
     const carODM = new CarODM();
+    carODM.validateId(id);
     const carObj = await carODM.findById(id);
 
     if (!carObj) {
@@ -40,10 +37,9 @@ class CarService {
     return this.createVehicleDomain(carObj);
   }
 
-  public async updateById(id: string, body: ICar) {
-    if (!isValidObjectId(id)) throw new HttpException('Invalid mongo id', StatusCode.UNPROCESSABLE);
-
+  public async updateCarById(id: string, body: ICar) {
     const carODM = new CarODM();
+    carODM.validateId(id);
     const carObj = await carODM.findById(id);
 
     if (!carObj) {
