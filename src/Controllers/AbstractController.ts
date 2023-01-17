@@ -10,7 +10,6 @@
  * @method read(): Método deve ler as entidades.
  * @method update(): Método deve atualizar uma ententidade.
  * @method delete(): Método deve remover uma entidade.
-
 */
 
 import { Request, Response } from 'express';

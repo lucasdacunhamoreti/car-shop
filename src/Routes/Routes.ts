@@ -2,10 +2,9 @@ import { Router } from 'express';
 import CarRoute from './Car';
 import MotorcycleRoute from './Motorcycle';
 
-const routes = Router();
+const router = Router();
 
-routes.use('/cars', CarRoute);
+router.use('/cars', CarRoute);
+router.use('/motorcycles', MotorcycleRoute);
 
-routes.use('/motorcycles', MotorcycleRoute);
-
-export default routes;
+export default router;
