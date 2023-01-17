@@ -1,22 +1,18 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response, Request } from 'express';
 import ICar from '../Interfaces/ICar';
 import StatusCode from '../Interfaces/StatusCode';
 import CarService from '../Services/CarService';
+import AbstractController from './AbstractController';
 
-class CarController {
-  private req: Request;
-  private res: Response;
-  private next: NextFunction;
-  private service: CarService;
+export default class CarController extends AbstractController<CarService> {
+  next: NextFunction;
 
   constructor(req: Request, res: Response, next: NextFunction) {
-    this.req = req;
-    this.res = res;
+    super(new CarService(), req, res);
     this.next = next;
-    this.service = new CarService();
   }
 
-  public async registerCar() {
+  async create(): Promise<Response> {
     const { model, year, color, status, buyValue, doorsQty, seatsQty } = this.req.body;
 
     const car: ICar = {
@@ -30,42 +26,35 @@ class CarController {
     };
     
     try {      
-      const newCar = await this.service.registerCar(car);      
+      const newCar = await this.service.register(car);      
       return this.res.status(StatusCode.CREATED).json(newCar);
     } catch (error) {
-      this.next(error);
+      return this.res.json(this.next(error));
     }
   }
 
-  public async findAllCars() {
+  async read(): Promise<Response | undefined> {
     try {   
-      const carGroup = await this.service.findAllCars();      
+      const { id } = this.req.params;
+      if (id) {
+        const carJson = await this.service.findById(id);      
+        return this.res.status(StatusCode.OK).json(carJson);
+      }
+      const carGroup = await this.service.findAll();      
       return this.res.status(StatusCode.OK).json(carGroup);
     } catch (error) {
       this.next(error);
     }
   }
 
-  public async findCarById() {
-    try { 
-      const { id } = this.req.params;
-      const carObj = await this.service.findCarById(id);      
-      return this.res.status(StatusCode.OK).json(carObj);
-    } catch (error) {
-      this.next(error);
-    }
-  }
-
-  public async updateCarById() {
+  async update(): Promise<Response | undefined> {
     try { 
       const { id } = this.req.params;
       const { body } = this.req;
-      const carUpdated = await this.service.updateCarById(id, body);      
+      const carUpdated = await this.service.update(id, body);      
       return this.res.status(StatusCode.OK).json(carUpdated);
     } catch (error) {
       this.next(error);
     }
   }
 }
-
-export default CarController;

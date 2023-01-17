@@ -12,20 +12,20 @@ class CarService {
     return null;
   }
 
-  public async registerCar(car: ICar) {
+  public async register(car: ICar) {
     const carODM = new CarODM();
     const newCar = await carODM.create(car);
     return this.createVehicleDomain(newCar);
   }
 
-  public async findAllCars() {
+  public async findAll() {
     const carODM = new CarODM();
     const carGroup = await carODM.findAll();
     
     return carGroup.map((obj) => this.createVehicleDomain(obj));
   }
 
-  public async findCarById(id: string) {
+  public async findById(id: string) {
     const carODM = new CarODM();
     carODM.validateId(id);
     const carObj = await carODM.findById(id);
@@ -37,7 +37,7 @@ class CarService {
     return this.createVehicleDomain(carObj);
   }
 
-  public async updateCarById(id: string, body: ICar) {
+  public async update(id: string, body: ICar) {
     const carODM = new CarODM();
     carODM.validateId(id);
     const carObj = await carODM.findById(id);

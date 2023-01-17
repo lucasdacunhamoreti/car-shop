@@ -5,22 +5,22 @@ const routes = Router();
 
 routes.post(
   '/',
-  (req, res, next) => new MotorcycleController(req, res, next).registerMotorcycle(),
+  (req, res, next) => new MotorcycleController(req, res, next).create(),
 );
   
 routes.get(
   '/',
-  (req, res, next) => new MotorcycleController(req, res, next).findAllMotorcycles(),
+  (req, res, next) => new MotorcycleController(req, res, next).read(),
 );
   
 routes.get(
   '/:id',
-  (req, res, next) => new MotorcycleController(req, res, next).findMotorcycleById(),
+  (req, res, next) => new MotorcycleController(req, res, next).read(),
 );
   
 routes.put(
   '/:id',
-  (req, res, next) => new MotorcycleController(req, res, next).updateMotorcycleById(),
+  (req, res, next) => new MotorcycleController(req, res, next).update(),
 );
 
 export default routes;

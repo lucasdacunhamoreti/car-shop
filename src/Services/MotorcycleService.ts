@@ -12,13 +12,13 @@ class MotorcycleService {
     return null;
   }
 
-  public async registerMotorcycle(motorcycle: IMotorcycle) {
+  public async register(motorcycle: IMotorcycle) {
     const motorcycleODM = new MotorcycleODM();
     const newMotorcycle = await motorcycleODM.create(motorcycle);
     return this.createMotorcycleDomain(newMotorcycle);
   }
 
-  public async findAllMotorcycles() {
+  public async findAll() {
     const motorcycleODM = new MotorcycleODM();
     const motorcyclesGroup = await motorcycleODM.findAll();
     const motorcycleDomain = motorcyclesGroup.map((obj) => this.createMotorcycleDomain(obj));
@@ -26,7 +26,7 @@ class MotorcycleService {
     return motorcycleDomain;
   }
 
-  public async findMotorcycleById(id: string) {
+  public async findById(id: string) {
     const motorcycleODM = new MotorcycleODM();
     motorcycleODM.validateId(id);
     const motorcycleObj = await motorcycleODM.findById(id);
@@ -38,7 +38,7 @@ class MotorcycleService {
     return this.createMotorcycleDomain(motorcycleObj);
   }
 
-  public async updateMotorcycleById(id: string, body: IMotorcycle) {
+  public async update(id: string, body: IMotorcycle) {
     const motorcycleODM = new MotorcycleODM();
     motorcycleODM.validateId(id);
     const motorcycleObj = await motorcycleODM.findById(id);
